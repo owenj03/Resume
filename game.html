@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owen Jensen - BYU Reflex Game</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <!---->
+    <link href="css/myStyles.css" rel="stylesheet">
+    <style>
+        /* --- GENERAL PAGE STYLES --- */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a2e; /* Dark Background */
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            /* REMOVED: align-items and justify-content to fix your footer issue */
+            min-height: 100vh;
+            user-select: none; 
+        }
+
+        /* --- THE APP CONTAINER --- */
+        .app-container {
+            width: 90%;
+            max-width: 1000px;
+            border: 4px solid #002E5D; /* BYU Navy Border */
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            background-color: #16213e;
+            /* ADDED: Centers the game on the page manually */
+            margin: 50px auto; 
+        }
+
+        /* --- DIV #1: HEADER --- */
+        .game-header {
+            background-color: #002E5D; /* BYU Navy Blue */
+            padding: 20px;
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            border-bottom: 2px solid #ffffff;
+        }
+
+        .game-header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .scores-wrapper {
+            text-align: right;
+        }
+
+        .score-board {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffffff; /* White text */
+        }
+
+        .high-score-board {
+            font-size: 0.9rem;
+            color: #cccccc; 
+            margin-top: 4px;
+        }
+
+        /* --- DIV #2: GAME BOARD --- */
+        .game-board {
+            position: relative; 
+            height: 400px;
+            background-color: #1a1a2e;
+            overflow: hidden; 
+            cursor: crosshair;
+            display: flex; /* To center the overlay text */
+            justify-content: center; 
+            align-items: center;
+        }
+
+        /* The Overlay text (Press Start) */
+        #message-overlay {
+            position: absolute;
+            text-align: center;
+            pointer-events: none; 
+            z-index: 10;
+            transition: opacity 0.3s;
+        }
+
+        #message-overlay h2 {
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.2);
+            margin: 0;
+        }
+
+        /* --- THE TARGET (IMAGE VERSION) --- */
+        #target {
+            width: 70px;              /* Slightly larger for images */
+            height: 70px;
+            background-color: #ffffff; /* White Background */
+            border-radius: 50%;
+            position: absolute;       /* Moves freely */
+            display: none;            /* Hidden initially */
+            
+            /* Flexbox to center the image inside the circle */
+            /* Removed display: flex here because it overrides display: none */
+            justify-content: center;
+            align-items: center;
+            
+            /* Shadow/Glow */
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8); 
+            transition: transform 0.1s;
+            cursor: pointer;
+            overflow: hidden; /* Ensures square images don't poke out of the circle */
+        }
+
+        /* New style to ensure images fit perfectly */
+        #target img {
+            width: 80%;       /* Fills 80% of the bubble so it doesn't touch edges */
+            height: 80%;
+            object-fit: contain; /* Keeps the image aspect ratio (doesn't squash it) */
+            pointer-events: none; /* Ensures clicks go to the bubble, not the image */
+        }
+
+        #target:active {
+            transform: scale(0.9); 
+            background-color: #cccccc; 
+        }
+
+        /* --- DIV #3: CONTROLS --- */
+        .game-controls {
+            background-color: #002E5D; /* BYU Navy Blue */
+            padding: 15px;
+            text-align: center;
+            border-top: 2px solid #ffffff;
+        }
+
+        button {
+            background-color: #ffffff; /* White Button */
+            color: #002E5D; /* Navy Text */
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 0 #cccccc;
+        }
+
+        button:hover {
+            background-color: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        .timer {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="navbar">
+
+            <a href="index.html" class="headerText" id="top">Owen Jensen</a>
+
+            <span class="align-right" style="color: black">
+                <a href="index.html">Resume</a> |
+                <a href="adventures.html">Adventures</a> |
+                <a href="game.html">Game</a>
+            </span>
+    </div>
+
+
+    <!-- Main App Wrapper -->
+    <div class="app-container">
+
+        <!-- DIV 1: Header -->
+        <div class="game-header">
+            <h1>Cougar Reflex</h1>
+            <div class="scores-wrapper">
+                <div class="score-board">Score: <span id="score">0</span></div>
+                <div class="high-score-board">Best: <span id="highScore">0</span></div>
+            </div>
+        </div>
+
+        <!-- DIV 2: Game Board -->
+        <div class="game-board" id="board">
+            <div id="message-overlay">
+                <h2>PRESS START</h2>
+            </div>
+            <!-- The target bubble -->
+            <div id="target"></div>
+        </div>
+
+        <!-- DIV 3: Footer/Controls -->
+        <div class="game-controls">
+            <button onclick="startGame()">Start Game</button>
+            <div class="timer">Time Left: <span id="time">10</span>s</div>
+        </div>
+
+    </div>
+
+    <script>
+        // Game Variables
+        let score = 0;
+        let highScore = localStorage.getItem('byuReflexHighScore') || 0; 
+        let timeLeft = 10;
+        let gameInterval;
+        let isPlaying = false;
+
+        // DOM Elements
+        const scoreDisplay = document.getElementById('score');
+        const highScoreDisplay = document.getElementById('highScore');
+        const timeDisplay = document.getElementById('time');
+        const board = document.getElementById('board');
+        const target = document.getElementById('target');
+        const overlay = document.getElementById('message-overlay');
+
+        // Initialize High Score
+        highScoreDisplay.innerText = highScore;
+
+        // Function to start the game
+        function startGame() {
+            if (isPlaying) return; 
+            
+            score = 0;
+            timeLeft = 10;
+            isPlaying = true;
+            
+            scoreDisplay.innerText = score;
+            timeDisplay.innerText = timeLeft;
+            overlay.style.opacity = '0'; 
+            
+            moveTarget();
+            target.style.display = 'flex'; 
+
+            gameInterval = setInterval(() => {
+                timeLeft--;
+                timeDisplay.innerText = timeLeft;
+
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        // Function to end the game
+        function endGame() {
+            clearInterval(gameInterval);
+            isPlaying = false;
+            target.style.display = 'none';
+            
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('byuReflexHighScore', highScore);
+                highScoreDisplay.innerText = highScore;
+                overlay.innerHTML = `<h2>NEW RECORD!</h2><p>Score: ${score}</p>`;
+            } else {
+                overlay.innerHTML = `<h2>GAME OVER</h2><p>Final Score: ${score}</p>`;
+            }
+
+            overlay.style.opacity = '1';
+        }
+
+        // Function to move the target (IMAGE VERSION)
+        function moveTarget() {
+            // 1. Get board limits
+            const boardRect = board.getBoundingClientRect();
+            const maxTop = boardRect.height - 80; // Adjusted for bigger icon
+            const maxLeft = boardRect.width - 80;
+
+            // 2. Random position
+            const randomTop = Math.floor(Math.random() * maxTop);
+            const randomLeft = Math.floor(Math.random() * maxLeft);
+
+            target.style.top = randomTop + 'px';
+            target.style.left = randomLeft + 'px';
+
+            // 3. Random Image Logic
+            // IMPORTANT: Replace these paths with your actual image files!
+            const images = [
+                'images/BYU-Logo.png', 
+                'images/BYU-CougarHead.png', 
+                'images/BYU-Block.png', 
+                'images/Athletics.svg'
+            ]; 
+            
+            const randomImage = images[Math.floor(Math.random() * images.length)];
+            
+            // Instead of innerText, we set innerHTML to an image tag
+            target.innerHTML = `<img src="${randomImage}" alt="icon">`;
+        }
+
+        // Click Listeners
+        target.addEventListener('mousedown', () => {
+            if (isPlaying) {
+                score++;
+                scoreDisplay.innerText = score;
+                moveTarget();
+            }
+        });
+
+        target.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (isPlaying) {
+                score++;
+                scoreDisplay.innerText = score;
+                moveTarget();
+            }
+        });
+
+    </script>
+
+    <footer>
+        Copyright &copy; Owen Jensen 2025
+    </footer>
+</body>
+</html>

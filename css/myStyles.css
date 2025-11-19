@@ -1,0 +1,147 @@
+body {
+    font-family: Arial, Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    color: #2c2c2c;
+    background-color: rgb(255, 234, 226);
+    margin: 0;
+    padding: 0;
+}
+a {
+    color: darkgreen;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
+}
+a:hover {
+    color: green;
+    text-decoration: underline;
+}
+.headerText {
+    font-size: 22px;
+    font-weight: bold;
+    color: #000000;
+}
+.headerText:hover {
+    text-decoration: none;
+    color: #000000;
+}
+.navbar {
+    background-color: #f4f4f4;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    height: 25px;
+    padding: 20px;
+}
+header {
+    display: flex;
+    align-items: center;
+    background-color: #2f2f2f;
+    background-size: cover;
+    left: 0px;
+    right: 0px;
+    height: 600px;
+}
+.sectionBG {
+    background-size: cover;
+    left: 0px;
+    right: 0px;
+}
+.tableauSection {
+    background-color: #ffffff;
+    background-size: cover;
+    left: 0px;
+    right: 0px;
+}
+.mainSection {
+    padding: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+.bold {
+    font-weight: bold;
+}
+.add-margin {
+    margin-bottom: 15px;
+}
+.align-right {
+    float: right;
+}
+.align-center {
+    text-align: center;
+}
+.add-padding {
+    padding: 10px;
+}
+h1 {
+    font-size: 60px;
+    color: white;
+}
+h3 {
+    font-size: 22px;
+    color: white;
+}
+.subheading {
+    font-size: 32px;
+    font-weight: normal;
+}
+.video-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+}
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+footer {
+    background-color: #f4f4f4;
+    color:#565656;
+    margin-top: auto;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    height: 20px;
+    text-align: center;
+    padding: 10px;
+}
+.white-text {
+    color: white;
+}
+.split-layout {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.img-col {
+    flex: 0 0 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.img-col img {
+    width: auto;
+    max-width: 100%;
+    border-radius: 10px;
+    display: block;
+}
+
+.text-col {
+    flex: 1;
+}
+
+@media (max-width: 768px) {
+    .split-layout {
+        flex-direction: column;
+    }
+    .img-col {
+        width: 100%;
+    }
+}
